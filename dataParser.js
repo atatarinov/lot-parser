@@ -8,26 +8,34 @@ let artistsNamesArray = [];
 
 
 dir.readFiles(__dirname + '/data/2015-03-18',
-  function(err, content, next) {
-      if (err) throw err;
+  function (err, content, next) {
+    if (err) throw err;
 
-      const $ = cheerio.load(content);
+    let artistObj = {};
 
-      $('h2').each(function () {
-        let artistName = this.children[0].data;
-        artistsNamesArray.push(artistName);
-      });
+    const $ = cheerio.load(content);
 
-      // console.log('content:', content);
-      // console.log(typeof content);
-      // console.log('_________________');
-      next();
+    $('h2').each(function () {
+      let artistName = this.children[0].data;
+      artistObj.artist = artistName;
+    });
+
+    $('h3').each(function () {
+      let works = this.children[0].data;
+      artistObj.works = works;
+    });
+    artistsNamesArray.push(artistObj);
+
+    // console.log('content:', content);
+    // console.log(typeof content);
+    // console.log('_________________');
+    next();
   },
-  function(err, files){
-      if (err) throw err;
-      console.log('finished reading files:', files);
+  function (err, files) {
+    if (err) throw err;
+    console.log('finished reading files:', files);
 
-      console.log(artistsNamesArray);
+    console.log(artistsNamesArray);
   });
 
 
